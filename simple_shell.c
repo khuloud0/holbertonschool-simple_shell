@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
+#include <string.h>
 #include <sys/wait.h>
 
 /**
@@ -10,6 +11,32 @@ void print_prompt(void)
 {
 	if (isatty(STDIN_FILENO))
 		printf("$ ");
+}
+
+/**
+ * trim_line - removes leading and trailing spaces
+ * @line: pointer to string
+ * Return: pointer to trimmed string
+ */
+char *trim_line(char *line)
+{
+	char *start, *end;
+
+	if (!line)
+		return (NULL);
+
+	start = line;
+	while (*start == ' ' || *start == '\t')
+		start++;
+
+	end = line + strlen(line) - 1;
+	while (end > start && (*end == ' ' || *end == '\t'))
+	{
+		*end = '\0';
+		end--;
+	}
+
+	return (start);
 }
 
 /**
@@ -44,7 +71,7 @@ void execute_command(char *line)
 	pid_t child_pid;
 	char *argv[] = {line, NULL};
 
-	if (!line)
+	if (!line || *line == '\0')
 		return;
 
 	child_pid = fork();
@@ -72,7 +99,7 @@ void execute_command(char *line)
  */
 int main(void)
 {
-	char *line;
+	char *line, *trimmed;
 
 	while (1)
 	{
@@ -84,7 +111,9 @@ int main(void)
 			break;
 		}
 
-		execute_command(line);
+		trimmed = trim_line(line);
+		execute_command(trimmed);
+
 		free(line);
 	}
 
