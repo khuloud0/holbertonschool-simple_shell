@@ -15,15 +15,13 @@ void print_prompt(void)
 
 /**
  * trim_line - removes leading and trailing spaces
- * @line: pointer to string
- * Return: pointer to trimmed string
  */
 char *trim_line(char *line)
 {
 	char *start, *end;
 
 	if (!line)
-		return (NULL);
+		return NULL;
 
 	start = line;
 	while (*start == ' ' || *start == '\t')
@@ -36,12 +34,11 @@ char *trim_line(char *line)
 		end--;
 	}
 
-	return (start);
+	return start;
 }
 
 /**
  * read_line - reads a line from stdin
- * Return: pointer to line (must be freed by caller)
  */
 char *read_line(void)
 {
@@ -53,38 +50,45 @@ char *read_line(void)
 	if (nread == -1)
 	{
 		free(line);
-		return (NULL);
+		return NULL;
 	}
 
 	if (line[nread - 1] == '\n')
 		line[nread - 1] = '\0';
 
-	return (line);
+	return line;
 }
 
 /**
  * execute_command - forks and executes a command
- * @line: command to execute
  */
 void execute_command(char *line)
 {
-	pid_t child_pid;
-	char *argv[2]; /* تعريف array ثم نخصص القيم runtime */
+	pid_t pid;
+	char **argv;
 
 	if (!line || *line == '\0')
 		return;
 
-	argv[0] = line;
-	argv[1] = NULL;
-
-	child_pid = fork();
-	if (child_pid == -1)
+	argv = malloc(2 * sizeof(char *));
+	if (!argv)
 	{
-		perror("fork");
+		perror("malloc");
 		return;
 	}
 
-	if (child_pid == 0)
+	argv[0] = line;
+	argv[1] = NULL;
+
+	pid = fork();
+	if (pid == -1)
+	{
+		perror("fork");
+		free(argv);
+		return;
+	}
+
+	if (pid == 0)
 	{
 		if (execve(argv[0], argv, NULL) == -1)
 		{
@@ -94,11 +98,12 @@ void execute_command(char *line)
 	}
 	else
 		wait(NULL);
+
+	free(argv);
 }
 
 /**
- * main - Simple Shell 0.1
- * Return: 0
+ * main - simple shell
  */
 int main(void)
 {
@@ -119,5 +124,5 @@ int main(void)
 		free(line);
 	}
 
-	return (0);
+	return 0;
 }
