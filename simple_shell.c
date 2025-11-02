@@ -69,10 +69,13 @@ char *read_line(void)
 void execute_command(char *line)
 {
 	pid_t child_pid;
-	char *argv[] = {line, NULL};
+	char *argv[2]; /* تعريف array ثم نخصص القيم runtime */
 
 	if (!line || *line == '\0')
 		return;
+
+	argv[0] = line;
+	argv[1] = NULL;
 
 	child_pid = fork();
 	if (child_pid == -1)
@@ -83,7 +86,7 @@ void execute_command(char *line)
 
 	if (child_pid == 0)
 	{
-		if (execve(line, argv, NULL) == -1)
+		if (execve(argv[0], argv, NULL) == -1)
 		{
 			perror("simple_shell");
 			exit(EXIT_FAILURE);
@@ -113,7 +116,6 @@ int main(void)
 
 		trimmed = trim_line(line);
 		execute_command(trimmed);
-
 		free(line);
 	}
 
