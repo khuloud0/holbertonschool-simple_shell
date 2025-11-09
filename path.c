@@ -43,7 +43,7 @@ char *find_path(char *command)
 			return (strdup(command));
 		else
 			return (NULL);
-	}
+	}        
 	while (environ[i])
 	{
 		if (strncmp(environ[i], "PATH=", 5) == 0)
