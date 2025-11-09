@@ -1,13 +1,19 @@
 #include "Shell.h"
 
-/* Print the shell prompt */
+/**
+ * print_prompt - Prints the shell prompt if input is from terminal
+ */
 void print_prompt(void)
 {
 	if (isatty(STDIN_FILENO))
 		write(STDOUT_FILENO, "#cisfun$ ", 9);
 }
 
-/* Read a line of input and remove the trailing newline */
+/**
+ * handle_input - Reads a line of input from stdin and removes trailing newline
+ *
+ * Return: Pointer to the input line, or NULL on EOF/error
+ */
 char *handle_input(void)
 {
 	char *line = NULL;
@@ -28,7 +34,13 @@ char *handle_input(void)
 	return (line);
 }
 
-/* Handle built-in commands like exit and env */
+/**
+ * handle_builtins - Executes built-in commands like exit and env
+ * @args: Array of arguments
+ * @argv: Array of program arguments (argv[0] is program name)
+ *
+ * Return: 0 if a builtin was executed, -1 otherwise
+ */
 int handle_builtins(char **args, char **argv)
 {
 	int i;
@@ -49,7 +61,13 @@ int handle_builtins(char **args, char **argv)
 	return (-1);
 }
 
-/* Main shell loop */
+/**
+ * main - Entry point for the shell
+ * @argc: Argument count
+ * @argv: Argument vector
+ *
+ * Return: Exit status of last executed command
+ */
 int main(int argc, char **argv)
 {
 	char *line, **args;
