@@ -1,16 +1,66 @@
 #include "Shell.h"
 
+/* Print the shell prompt */
+void print_prompt(void)
+{
+	if (isatty(STDIN_FILENO))
+		write(STDOUT_FILENO, "#cisfun$ ", 9);
+}
+
+/* Read a line of input and remove the trailing newline */
+char *handle_input(void)
+{
+	char *line = NULL;
+	size_t len = 0;
+	ssize_t read;
+
+	read = getline(&line, &len, stdin);
+	if (read == -1)
+	{
+		if (isatty(STDIN_FILENO))
+			write(STDOUT_FILENO, "\n", 1);
+		return (NULL);
+	}
+
+	if (line[read - 1] == '\n')
+		line[read - 1] = '\0';
+
+	return (line);
+}
+
+/* Handle built-in commands like exit and env */
+int handle_builtins(char **args, char **argv)
+{
+	int i;
+
+	if (strcmp(args[0], "exit") == 0)
+		exit(0);
+
+	if (strcmp(args[0], "env") == 0)
+	{
+		for (i = 0; environ[i]; i++)
+		{
+			write(STDOUT_FILENO, environ[i], _strlen(environ[i]));
+			write(STDOUT_FILENO, "\n", 1);
+		}
+		return (0);
+	}
+
+	return (-1);
+}
+
+/* Main shell loop */
 int main(int argc, char **argv)
 {
-	char *line;
-	char **args;
+	char *line, **args;
 	int status = 0;
 
 	(void)argc;
 
 	while (1)
 	{
-		line = read_input();
+		print_prompt();
+		line = handle_input();
 		if (!line)
 			break;
 
@@ -22,9 +72,14 @@ int main(int argc, char **argv)
 			continue;
 		}
 
-		status = handle_builtins(args);
-		if (status == -1)
-			status = execute_command(args, argv);
+		if (handle_builtins(args, argv) == 0)
+		{
+			free_tokens(args);
+			free(line);
+			continue;
+		}
+
+		status = execute_command(args, argv);
 
 		free_tokens(args);
 		free(line);
