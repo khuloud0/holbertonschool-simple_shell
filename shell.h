@@ -10,9 +10,15 @@
 
 extern char **environ;
 
+/* Parsing and utility functions */
 char **parse_line(char *line);
 void free_tokens(char **tokens);
 char *find_path(char *command);
 int _strlen(const char *s);
+
+/* New helper functions for main.c */
+char *read_input(void);
+int handle_builtins(char **args, char **argv);
+int execute_command(char **args, char **argv);
 
 #endif
