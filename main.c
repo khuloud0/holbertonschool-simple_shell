@@ -1,7 +1,7 @@
 #include "Shell.h"
 
 /**
- * print_prompt - Prints the shell prompt if input is from terminal
+ * print_prompt - Prints the shell prompt if in interactive mode
  */
 void print_prompt(void)
 {
@@ -12,7 +12,7 @@ void print_prompt(void)
 /**
  * handle_input - Reads a line of input from stdin and removes trailing newline
  *
- * Return: Pointer to the input line, or NULL on EOF/error
+ * Return: Pointer to the input string, or NULL on EOF/error
  */
 char *handle_input(void)
 {
@@ -35,11 +35,11 @@ char *handle_input(void)
 }
 
 /**
- * handle_builtins - Executes built-in commands like exit and env
+ * handle_builtins - Handles built-in shell commands like exit and env
  * @args: Array of arguments
- * @argv: Array of program arguments (argv[0] is program name)
+ * @argv: Program name and arguments from main
  *
- * Return: 0 if a builtin was executed, -1 otherwise
+ * Return: 0 if a builtin command was executed, -1 otherwise
  */
 int handle_builtins(char **args, char **argv)
 {
@@ -62,11 +62,11 @@ int handle_builtins(char **args, char **argv)
 }
 
 /**
- * main - Entry point for the shell
+ * main - Main loop of the shell
  * @argc: Argument count
  * @argv: Argument vector
  *
- * Return: Exit status of last executed command
+ * Return: Exit status of the last executed command
  */
 int main(int argc, char **argv)
 {
