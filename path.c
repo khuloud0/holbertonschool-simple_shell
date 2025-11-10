@@ -6,13 +6,14 @@
 #include <stdio.h>
 
 /**
- *	check_absolute - Check if command is absolute or relative path
+ *	check_absolute - Check if command is an absolute or relative path
  *	@command: Command string supplied by user
  *
  *	If command starts with '/' or '.' and exists, returns a strdup'd path.
  *	Caller must free returned string. Returns NULL otherwise.
  *	Return: strdup'd path when command exists, or NULL on failure
  */
+
 static char *check_absolute(char *command)
 {
 	struct stat st;
@@ -32,10 +33,11 @@ static char *check_absolute(char *command)
 /**
  *	get_path_env - Retrieve PATH value from environ
  *
- *	Returns pointer to PATH value inside environ (NOT allocated),
- *	or NULL if PATH is not present.
- *	Return: pointer to PATH string inside environ or NULL if not found
+ *	Searches the process environment for the "PATH=" entry and returns
+ *	a pointer to the PATH value within environ (not allocated).
+ *	Return: pointer to PATH string inside environ, or NULL if not found
  */
+
 static char *get_path_env(void)
 {
 	int i = 0;
@@ -57,9 +59,12 @@ static char *get_path_env(void)
  *	@path_copy: A modifiable strdup'd copy of PATH (will be tokenized)
  *	@command: Command name to search for
  *
- *	Returns malloc'd full path if found (caller must free), or NULL.
+ *	Iterates directories in path_copy and builds candidate paths for the
+ *	command. Returns a malloc'd full path if an executable is found.
+ *	Caller must free the returned string.
  *	Return: malloc'd full path string if executable found, or NULL otherwise
  */
+
 static char *search_in_path(char *path_copy, char *command)
 {
 	char *dir, *full_path;
@@ -91,10 +96,13 @@ static char *search_in_path(char *path_copy, char *command)
  *	find_path - Finds the full path of a command using PATH
  *	@command: The command to search for
  *
- *	Return: Full path string (malloc'd), or NULL if not found.
- *	If command is absolute/relative and exists, returns strdup'd command.
- *	Caller is responsible for freeing returned pointer.
+ *	Checks whether command is an absolute/relative path and uses it if
+ *	executable. Otherwise searches PATH entries for an executable with
+ *	the given name and returns a malloc'd full path.
+ *	Caller is responsible for freeing the returned pointer.
+ *	Return: malloc'd full path or strdup'd command when found, NULL otherwise
  */
+
 char *find_path(char *command)
 {
 	char *path_env = NULL, *path_copy = NULL, *result = NULL;
@@ -102,7 +110,6 @@ char *find_path(char *command)
 	if (command == NULL)
 		return (NULL);
 
-	/* If absolute or relative path, use it directly if executable */
 	result = check_absolute(command);
 	if (result != NULL)
 		return (result);

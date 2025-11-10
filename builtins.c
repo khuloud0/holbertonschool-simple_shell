@@ -1,11 +1,16 @@
 #include "shell.h"
 
 /**
- * handle_exit - Handles the exit command
- * @args: Argument vector
- * @line: Input line
- * @status: Exit status
+ *	handle_builtins - Handle shell built-in commands
+ *	@args: NULL-terminated array of arguments (args[0] is the command)
+ *	@status: Pointer to shell status variable to update if needed
+ *
+ *	Checks whether args[0] is a builtin (like "exit" or "env") and runs
+ *	the appropriate action. Returns 1 if the command was a builtin and
+ *	handled, or 0 if not (caller should attempt external execution).
+ *	Return: 1 if builtin handled, 0 otherwise
  */
+
 void handle_exit(char **args, char *line, int status)
 {
 	free_tokens(args);
