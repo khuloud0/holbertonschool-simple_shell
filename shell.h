@@ -21,4 +21,8 @@ char *read_input(void);
 int handle_builtins(char **args, char **argv);
 int execute_command(char **args, char **argv);
 
+/* New helper functions for main.c */
+ssize_t prompt_and_read(char **line, size_t *len);
+int execute_command(char **args, char **argv, int *status);
+
 #endif
