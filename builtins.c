@@ -1,21 +1,29 @@
-#include "Shell.h"
+#include "shell.h"
 
-int handle_builtins(char **args)
+/**
+ * handle_exit - Handles the exit command
+ * @args: Argument vector
+ * @line: Input line
+ * @status: Exit status
+ */
+void handle_exit(char **args, char *line, int status)
 {
-	int i;
+	free_tokens(args);
+	free(line);
+	exit(status);
+}
 
-	if (strcmp(args[0], "exit") == 0)
-		exit(0);
+/**
+ * handle_env - Prints the environment variables
+ */
+void handle_env(void)
+{
+	int i = 0;
 
-	if (strcmp(args[0], "env") == 0)
+	while (environ[i])
 	{
-		for (i = 0; environ[i]; i++)
-		{
-			write(STDOUT_FILENO, environ[i], _strlen(environ[i]));
-			write(STDOUT_FILENO, "\n", 1);
-		}
-		return (0);
+		write(STDOUT_FILENO, environ[i], _strlen(environ[i]));
+		write(STDOUT_FILENO, "\n", 1);
+		i++;
 	}
-
-	return (-1); /* Not a builtin */
 }

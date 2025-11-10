@@ -9,11 +9,11 @@
  */
 int main(int argc, char **argv)
 {
-	char *line = NULL, *full_cmd = NULL;
+	char *line = NULL;
 	size_t len = 0;
 	ssize_t read;
 	char **args;
-	int status = 0, i;
+	int status = 0;
 
 	(void)argc;
 
@@ -34,57 +34,19 @@ int main(int argc, char **argv)
 			line[read - 1] = '\0';
 
 		args = parse_line(line);
-		if (args == NULL || args[0] == NULL)
+		if (!args || !args[0])
 		{
 			free_tokens(args);
 			continue;
 		}
 
 		if (strcmp(args[0], "exit") == 0)
-		{
-			free_tokens(args);
-			free(line);
-			exit(status);
-		}
-
-		if (strcmp(args[0], "env") == 0)
-		{
-			for (i = 0; environ[i]; i++)
-			{
-				write(STDOUT_FILENO, environ[i], _strlen(environ[i]));
-				write(STDOUT_FILENO, "\n", 1);
-			}
-			free_tokens(args);
-			continue;
-		}
-
-		full_cmd = find_path(args[0]);
-		if (full_cmd == NULL)
-		{
-			fprintf(stderr, "%s: 1: %s: not found\n", argv[0], args[0]);
-			free_tokens(args);
-			status = 127;
-			continue;
-		}
-
-		if (fork() == 0)
-		{
-			if (execve(full_cmd, args, environ) == -1)
-			{
-				perror(argv[0]);
-				exit(EXIT_FAILURE);
-			}
-		}
+			handle_exit(args, line, status);
+		else if (strcmp(args[0], "env") == 0)
+			handle_env();
 		else
-		{
-			wait(&status);
-			if (WIFEXITED(status))
-				status = WEXITSTATUS(status);
-			else
-				status = 2;
-		}
+			execute_command(args, argv, &status);
 
-		free(full_cmd);
 		free_tokens(args);
 	}
 

@@ -1,26 +1,32 @@
-#include "Shell.h"
+#include "shell.h"
 
 /**
- * execute_command - Forks and executes a command
- * @args: Command arguments
- * @argv: Program name (for errors)
- *
- * Return: Exit status of the command
+ * execute_command - Executes a command
+ * @args: Argument vector
+ * @argv: Argument list from main
+ * @status: Pointer to status variable
  */
-int execute_command(char **args, char **argv)
+void execute_command(char **args, char **argv, int *status)
 {
+	char *full_cmd = find_path(args[0]);
 	pid_t pid;
-	int status;
-	char *full_cmd;
 
-	full_cmd = find_path(args[0]);
-	if (!full_cmd)
+	if (full_cmd == NULL)
 	{
-		fprintf(stderr, "%s: 1: %s: not found\n", argv[0], args[0]);
-		return (127);
+		dprintf(STDERR_FILENO, "%s: 1: %s: not found\n", argv[0], args[0]);
+		*status = 127;
+		return;
 	}
 
 	pid = fork();
+	if (pid == -1)
+	{
+		perror("fork");
+		free(full_cmd);
+		*status = 2;
+		return;
+	}
+
 	if (pid == 0)
 	{
 		if (execve(full_cmd, args, environ) == -1)
@@ -29,13 +35,12 @@ int execute_command(char **args, char **argv)
 			exit(EXIT_FAILURE);
 		}
 	}
+
+	wait(status);
+	if (WIFEXITED(*status))
+		*status = WEXITSTATUS(*status);
 	else
-		wait(&status);
+		*status = 2;
 
 	free(full_cmd);
-
-	if (WIFEXITED(status))
-		return (WEXITSTATUS(status));
-	else
-		return (2);
 }
