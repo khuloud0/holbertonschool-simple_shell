@@ -1,7 +1,7 @@
 #include "shell.h"
 
 /**
- * prompt_and_read - displays the prompt and reads a line from stdin.
+ * prompt_and_read - reads a line from stdin and displays the shell prompt.
  * @line: pointer to the input line buffer.
  * @len: pointer to the buffer length.
  *
@@ -22,7 +22,7 @@ ssize_t prompt_and_read(char **line, size_t *len)
 }
 
 /**
- * process_input - parses and executes the user input.
+ * process_input - parses and executes user input.
  * @line: input string entered by the user.
  * @argv: argument vector of the shell program.
  * @status: pointer to the variable storing the last command status.
