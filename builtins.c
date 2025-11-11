@@ -1,6 +1,16 @@
 #include "shell.h"
 
 /**
+ * handle_exit - Exits the shell with a given status
+ * @args: Array of arguments passed to the command
+ * @line: Input line buffer to be freed before exit
+ * @status: The last executed command's status
+ *
+ * Description: Frees memory and exits with the given status code.
+ * Return: Nothing (void)
+ */
+
+/**
  *	handle_builtins - Handle shell built-in commands
  *	@args: NULL-terminated array of arguments (args[0] is the command)
  *	@status: Pointer to shell status variable to update if needed

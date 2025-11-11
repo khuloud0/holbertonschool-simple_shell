@@ -23,9 +23,11 @@ ssize_t prompt_and_read(char **line, size_t *len)
 
 /**
  * process_input - Parses and executes the user input
- * @line: The input string
- * @argv: Program arguments
- * @status: Pointer to the last command status
+ * @line: The input string entered by the user
+ * @argv: The argument vector of the shell program
+ * @status: Pointer to the variable storing the last command status
+ *
+ * Return: Nothing
  */
 void process_input(char *line, char **argv, int *status)
 {
@@ -48,11 +50,11 @@ void process_input(char *line, char **argv, int *status)
 }
 
 /**
- * main - Entry point for the shell
+ * main - Entry point for the shell program
  * @argc: Argument count
  * @argv: Argument vector
  *
- * Return: Exit status of the last command
+ * Return: Exit status of the last executed command
  */
 int main(int argc, char **argv)
 {
@@ -78,4 +80,3 @@ int main(int argc, char **argv)
 	free(line);
 	return (status);
 }
-
