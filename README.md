@@ -85,7 +85,7 @@ $ cat script.sh | ./hsh
 
 ---
 
- Project Structure
+## 🗂️ Project Structure
 .
 ├── hsh                   # compiled output
 ├── main.c                # main loop and shell logic
@@ -99,19 +99,20 @@ $ cat script.sh | ./hsh
 
 ---
 
- Allowed Functions & System Calls
+## ⚙️ Allowed Functions & System Calls
 access, chdir, close, closedir, execve, exit, _exit,
 fflush, fork, free, getcwd, getline, getpid, isatty,
 kill, malloc, open, opendir, perror, printf, read,
 readdir, signal, stat, strtok, wait, waitpid, write
 
 ---
- � Authors
-- Khuloud alqarni , Banan ALeid
+
+## 👨‍💻 Authors
+- Khuloud alqarni , Banan aleid
 
 ---
 
- Manual
+## 📖 Manual
 View the man page with:
 
 man ./man_1_simple_shell
