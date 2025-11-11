@@ -106,8 +106,7 @@ kill, malloc, open, opendir, perror, printf, read,
 readdir, signal, stat, strtok, wait, waitpid, write
 
 ---
-
-## 👨‍💻 Authors
+ � Authors
 - Khuloud alqarni , Banan ALeid
 
 ---
