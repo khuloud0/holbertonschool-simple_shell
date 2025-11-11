@@ -1,11 +1,11 @@
 #include "shell.h"
 
 /**
- * prompt_and_read - Displays the prompt and reads a line from stdin
- * @line: Pointer to the input line buffer
- * @len: Pointer to the buffer length
+ * prompt_and_read - displays the prompt and reads a line from stdin.
+ * @line: pointer to the input line buffer.
+ * @len: pointer to the buffer length.
  *
- * Return: Number of characters read, or -1 on failure
+ * Return: number of characters read, or -1 on failure.
  */
 ssize_t prompt_and_read(char **line, size_t *len)
 {
@@ -22,12 +22,12 @@ ssize_t prompt_and_read(char **line, size_t *len)
 }
 
 /**
- * process_input - Parses and executes the user input
- * @line: The input string entered by the user
- * @argv: The argument vector of the shell program
- * @status: Pointer to the variable storing the last command status
+ * process_input - parses and executes the user input.
+ * @line: input string entered by the user.
+ * @argv: argument vector of the shell program.
+ * @status: pointer to the variable storing the last command status.
  *
- * Return: Nothing
+ * Return: nothing.
  */
 void process_input(char *line, char **argv, int *status)
 {
@@ -50,11 +50,11 @@ void process_input(char *line, char **argv, int *status)
 }
 
 /**
- * main - Entry point for the shell program
- * @argc: Argument count
- * @argv: Argument vector
+ * main - entry point for the shell program.
+ * @argc: argument count.
+ * @argv: argument vector.
  *
- * Return: Exit status of the last executed command
+ * Return: exit status of the last executed command.
  */
 int main(int argc, char **argv)
 {
