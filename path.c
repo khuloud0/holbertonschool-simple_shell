@@ -2,6 +2,44 @@
 #include <sys/stat.h>
 
 /**
+ * get_path_env - Retrieves the PATH environment variable
+ *
+ * Return: Pointer to PATH value, or NULL if not found
+ */
+char *get_path_env(void)
+{
+	int i = 0;
+
+	while (environ[i])
+	{
+		if (strncmp(environ[i], "PATH=", 5) == 0)
+			return (environ[i] + 5);
+		i++;
+	}
+	return (NULL);
+}
+
+/**
+ * build_full_path - Creates a full path string from directory and command
+ * @dir: The directory from PATH
+ * @command: The command to append
+ *
+ * Return: Full path (malloc'd) or NULL on failure
+ */
+char *build_full_path(char *dir, char *command)
+{
+	char *full_path;
+	int len = strlen(dir) + strlen(command) + 2;
+
+	full_path = malloc(len);
+	if (!full_path)
+		return (NULL);
+
+	sprintf(full_path, "%s/%s", dir, command);
+	return (full_path);
+}
+
+/**
  * find_path - Finds the full path of a command using PATH
  * @command: The command to search for
  *
@@ -9,31 +47,16 @@
  */
 char *find_path(char *command)
 {
-	char *path_env = NULL, *path_copy, *dir, *full_path;
-	int len, i = 0;
+	char *path_env, *path_copy, *dir, *full_path;
 	struct stat st;
 
-	if (command == NULL)
+	if (!command)
 		return (NULL);
 
 	if (command[0] == '/' || command[0] == '.')
-	{
-		if (stat(command, &st) == 0)
-			return (strdup(command));
-		else
-			return (NULL);
-	}
+		return (stat(command, &st) == 0 ? strdup(command) : NULL);
 
-	while (environ[i])
-	{
-		if (strncmp(environ[i], "PATH=", 5) == 0)
-		{
-			path_env = environ[i] + 5;
-			break;
-		}
-		i++;
-	}
-
+	path_env = get_path_env();
 	if (!path_env)
 		return (NULL);
 
@@ -42,17 +65,14 @@ char *find_path(char *command)
 		return (NULL);
 
 	dir = strtok(path_copy, ":");
-	while (dir != NULL)
+	while (dir)
 	{
-		len = strlen(dir) + strlen(command) + 2;
-		full_path = malloc(len);
+		full_path = build_full_path(dir, command);
 		if (!full_path)
 		{
 			free(path_copy);
 			return (NULL);
 		}
-
-		sprintf(full_path, "%s/%s", dir, command);
 
 		if (access(full_path, X_OK) == 0)
 		{
